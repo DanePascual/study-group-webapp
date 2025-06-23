@@ -1,0 +1,585 @@
+<!-- admin-login.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <title>Admin Login - Study Group</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .main-container {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        
+        .login-wrapper {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 900px;
+            height: 500px;
+            display: flex;
+        }
+        
+        .left-section {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .left-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .admin-badge {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .admin-badge i {
+            color: white;
+            font-size: 32px;
+        }
+        
+        .admin-welcome {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .admin-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 14px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .student-login-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .student-login-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        
+        .right-section {
+            width: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 50px 40px;
+        }
+        
+        .login-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 35px;
+            position: relative;
+        }
+        
+        .error-message {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            color: #e74c3c;
+            font-size: 12px;
+            width: 100%;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 45px 15px 45px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #2c3e50;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .password-toggle:hover {
+            color: #3498db;
+        }
+        
+        .security-notice {
+            background: #ecf0f1;
+            border-left: 4px solid #3498db;
+            padding: 12px 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+        }
+        
+        .security-notice p {
+            margin: 0;
+            font-size: 12px;
+            color: #2c3e50;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .back-link a {
+            color: #7f8c8d;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .back-link a:hover {
+            color: #3498db;
+        }
+        
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 20px;
+            }
+            
+            .login-wrapper {
+                flex-direction: column;
+                height: auto;
+                max-width: 100%;
+                min-height: 80vh;
+            }
+            
+            .left-section, .right-section {
+                width: 100%;
+            }
+            
+            .left-section {
+                padding: 30px 20px;
+                min-height: 200px;
+            }
+            
+            .right-section {
+                padding: 30px 20px;
+            }
+            
+            .admin-welcome {
+                font-size: 20px;
+            }
+            
+            .login-title {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+            
+            .login-subtitle {
+                font-size: 13px;
+                margin-bottom: 30px;
+            }
+            
+            .form-input {
+                padding: 12px 40px 12px 40px;
+            }
+            
+            .login-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 15px;
+            }
+            
+            .login-wrapper {
+                border-radius: 15px;
+                min-height: 75vh;
+            }
+            
+            .left-section {
+                padding: 25px 15px;
+                min-height: 180px;
+            }
+            
+            .right-section {
+                padding: 25px 15px;
+            }
+            
+            .admin-badge {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 15px;
+            }
+            
+            .admin-badge i {
+                font-size: 24px;
+            }
+            
+            .admin-welcome {
+                font-size: 18px;
+            }
+            
+            .login-title {
+                font-size: 18px;
+                line-height: 1.4;
+            }
+            
+            .form-input {
+                padding: 10px 35px 10px 35px;
+                font-size: 14px;
+            }
+            
+            .input-icon {
+                left: 12px;
+                font-size: 14px;
+            }
+            
+            .password-toggle {
+                right: 12px;
+                font-size: 14px;
+            }
+            
+            .student-login-btn {
+                padding: 10px 25px;
+                font-size: 13px;
+                margin-top: 20px;
+            }
+            
+            .login-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="login-wrapper">
+            <!-- Left side - Admin welcome section -->
+            <div class="left-section">
+                <div class="admin-badge">
+                    <i class="bi bi-shield-lock"></i>
+                </div>
+                <div class="admin-welcome">Administrator</div>
+                <div class="admin-subtitle">System Control Panel</div>
+                <button class="student-login-btn" onclick="goToStudentLogin()">
+                    <i class="bi bi-person"></i> Student Login
+                </button>
+            </div>
+
+            <!-- Right side - Login form -->
+            <div class="right-section">
+                <h1 class="login-title">ADMIN LOGIN</h1>
+                <p class="login-subtitle">Access administrative dashboard</p>
+                
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <i class="bi bi-person-badge input-icon"></i>
+                        <input type="text" class="form-input" id="adminUsername" placeholder="Administrator Username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <i class="bi bi-key input-icon"></i>
+                        <input type="password" class="form-input" id="adminPassword" placeholder="Administrator Password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <i class="bi bi-eye" id="passwordToggleIcon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="security-notice">
+                        <p><i class="bi bi-info-circle"></i> This is a secure admin area. All login attempts are logged and monitored.</p>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">
+                        <i class="bi bi-box-arrow-in-right"></i> Access Dashboard
+                    </button>
+                </form>
+                
+                <div class="back-link">
+                    <a href="#" onclick="goToStudentLogin()">
+                        <i class="bi bi-arrow-left"></i> Back to Student Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Password toggle functionality
+        function togglePassword() {
+            const passwordInput = document.getElementById('adminPassword');
+            const toggleIcon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        }
+        
+        // Admin login form submission
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            // Basic validation
+            if (!username || !password) {
+                showAlert('Please fill in all fields', 'error');
+                return;
+            }
+            
+            // Check for minimum security requirements
+            if (username.length < 3) {
+                showAlert('Username must be at least 3 characters long', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters long', 'error');
+                return;
+            }
+            
+            // Simulate login process
+            showLoadingState();
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // TODO: Replace with actual admin authentication
+                // For now, accept any username/password that meets requirements
+                showAlert('Admin login successful! Redirecting to dashboard...', 'success');
+                
+                // TODO: Redirect to admin dashboard
+                setTimeout(() => {
+                    // window.location.href = 'admin-dashboard.html';
+                    console.log('Would redirect to admin dashboard');
+                }, 1500);
+                
+                resetLoadingState();
+            }, 2000);
+        });
+        
+        // Show alert messages
+        function showAlert(message, type) {
+            // Remove existing alerts
+            const existingAlert = document.querySelector('.alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+            alertDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'error' ? 'exclamation-triangle' : 'check-circle'} me-2"></i>
+                    <span>${message}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv && alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        // Loading state management
+        function showLoadingState() {
+            const loginBtn = document.querySelector('.login-btn');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Authenticating...';
+            loginBtn.style.opacity = '0.7';
+        }
+        
+        function resetLoadingState() {
+            const loginBtn = document.querySelector('.login-btn');
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i class="bi bi-box-arrow-in-right"></i> Access Dashboard';
+            loginBtn.style.opacity = '1';
+        }
+        
+        // Navigation functions
+        function goToStudentLogin() {
+            // Redirect to student login page
+            window.location.href = 'student-login.html';
+        }
+        
+        // Security features
+        let loginAttempts = 0;
+        const maxAttempts = 3;
+        
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            // This will be called before the main submit handler
+            loginAttempts++;
+            
+            if (loginAttempts >= maxAttempts) {
+                e.preventDefault();
+                showAlert('Too many failed login attempts. Please try again later.', 'error');
+                
+                // Disable form for 5 minutes (in production, this should be server-side)
+                const form = document.getElementById('adminLoginForm');
+                form.style.opacity = '0.5';
+                form.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    form.style.opacity = '1';
+                    form.style.pointerEvents = 'auto';
+                    loginAttempts = 0;
+                }, 300000); // 5 minutes
+                
+                return;
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Alt+S for student login
+            if (e.ctrlKey && e.altKey && e.key === 's') {
+                e.preventDefault();
+                goToStudentLogin();
+            }
+        });
+        
+        // Log admin access attempts (in production, this should be server-side)
+        console.log('Admin login page accessed at:', new Date().toISOString());
+    </script>
+</body>
+</html>

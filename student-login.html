@@ -1,0 +1,755 @@
+<!-- student-login.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <title>Student Login - Study Group</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-container {
+        /*background: linear-gradient(135deg, #8bc34a 0%, #4caf50 100%);*/
+        background: linear-gradient(135deg, #618668 0%, #a2e0d8 100%);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+      }
+
+      .login-wrapper {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 900px;
+        height: 500px;
+        display: flex;
+      }
+
+      .left-section {
+        background-image: url(signup-bg-image.png);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+      }
+
+      .right-section {
+        width: 50%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 50px 40px;
+      }
+
+      .signup-text {
+        color: white;
+        font-size: 24px;
+        font-weight: 400;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .signup-btn {
+        background: white;
+        color: #333;
+        border: none;
+        border-radius: 25px;
+        padding: 15px 40px;
+        font-size: 16px;
+        font-weight: 500;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .signup-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .login-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 40px;
+        line-height: 1.3;
+      }
+
+      .form-group {
+        margin-bottom: 35px;
+        position: relative;
+      }
+
+      .error-message {
+        position: absolute;
+        bottom: -20px;
+        left: 0;
+        color: #dc3545;
+        font-size: 12px;
+        width: 100%;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 15px 45px 15px 45px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #666;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #4caf50;
+        background: white;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+        font-size: 16px;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .forgot-link {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+
+      .forgot-link a {
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .forgot-link a:hover {
+        color: #4caf50;
+      }
+
+      .login-btn,
+      .admin-btn {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 15px;
+      }
+
+      .login-btn {
+        background-color: #bdbdbd;
+        color: #333;
+      }
+
+      .admin-btn {
+        background-color: #bdbdbd;
+        color: #333;
+        position: relative;
+      }
+
+      .admin-btn i {
+        margin-right: 8px;
+      }
+
+      .login-btn:hover,
+      .admin-btn:hover {
+        background-color: #4caf50;
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      /* Security Modal Styles */
+      .security-modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+
+      .security-modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 0;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease-out;
+      }
+
+      @keyframes modalSlideIn {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .security-modal-header {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px 15px 0 0;
+        text-align: center;
+      }
+
+      .security-modal-header i {
+        font-size: 32px;
+        margin-bottom: 10px;
+      }
+
+      .security-modal-header h3 {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      .security-modal-body {
+        padding: 25px;
+        text-align: center;
+      }
+
+      .security-warning {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+        color: #856404;
+      }
+
+      .access-code-group {
+        margin: 20px 0;
+      }
+
+      .access-code-input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        text-align: center;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+
+      .access-code-input:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .modal-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .modal-btn-cancel {
+        background: #95a5a6;
+        color: white;
+      }
+
+      .modal-btn-proceed {
+        background: #4caf50;
+        color: white;
+      }
+
+      .modal-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .attempts-warning {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      /* Mobile Responsive Design */
+      @media (max-width: 768px) {
+        .main-container {
+          padding: 20px;
+        }
+
+        .login-wrapper {
+          flex-direction: column;
+          height: auto;
+          max-width: 100%;
+          min-height: 80vh;
+        }
+
+        .left-section,
+        .right-section {
+          width: 100%;
+        }
+
+        .left-section {
+          padding: 30px 20px;
+          min-height: 200px;
+        }
+
+        .right-section {
+          padding: 30px 20px;
+        }
+
+        .signup-text {
+          font-size: 20px;
+          margin-bottom: 20px;
+        }
+
+        .login-title {
+          font-size: 18px;
+          margin-bottom: 30px;
+        }
+
+        .form-input {
+          padding: 12px 40px 12px 40px;
+        }
+
+        .login-btn,
+        .admin-btn {
+          padding: 12px;
+          font-size: 14px;
+        }
+
+        .security-modal-content {
+          margin: 20% auto;
+          width: 95%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .main-container {
+          padding: 15px;
+        }
+
+        .login-wrapper {
+          border-radius: 15px;
+          min-height: 75vh;
+        }
+
+        .left-section {
+          padding: 25px 15px;
+          min-height: 150px;
+        }
+
+        .right-section {
+          padding: 25px 15px;
+        }
+
+        .signup-text {
+          font-size: 18px;
+        }
+
+        .login-title {
+          font-size: 16px;
+          line-height: 1.4;
+        }
+
+        .form-input {
+          padding: 10px 35px 10px 35px;
+          font-size: 14px;
+        }
+
+        .input-icon {
+          left: 12px;
+          font-size: 14px;
+        }
+
+        .password-toggle {
+          right: 12px;
+          font-size: 14px;
+        }
+
+        .signup-btn {
+          padding: 12px 30px;
+          font-size: 14px;
+        }
+
+        .login-btn,
+        .admin-btn {
+          padding: 10px;
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="login-wrapper">
+        <!-- Left side - Sign up section -->
+        <div class="left-section">
+          <div class="signup-text">Don't have an account?</div>
+          <button class="signup-btn" onclick="goToSignup()">Sign up</button>
+        </div>
+
+        <!-- Right side - Login form -->
+        <div class="right-section">
+          <h1 class="login-title">
+            LOG IN TO CONTINUE<br />LEARNING WITH BUDDIES!
+          </h1>
+
+          <form id="loginForm">
+            <div class="form-group">
+              <i class="bi bi-envelope input-icon"></i>
+              <input
+                type="email"
+                class="form-input"
+                id="email"
+                placeholder="Enter your institutional email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <i class="bi bi-lock input-icon"></i>
+              <input
+                type="password"
+                class="form-input"
+                id="password"
+                placeholder="Enter your password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                onclick="togglePassword()"
+              >
+                <i class="bi bi-eye" id="passwordToggleIcon"></i>
+              </button>
+            </div>
+
+            <div class="forgot-link">
+              <a href="#">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="login-btn">Log in</button>
+            <button
+              type="button"
+              class="admin-btn"
+              onclick="showAdminSecurity()"
+            >
+              <i class="bi bi-shield-lock"></i>Admin Log in
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security Modal -->
+    <div id="securityModal" class="security-modal">
+      <div class="security-modal-content">
+        <div class="security-modal-header">
+          <i class="bi bi-shield-exclamation"></i>
+          <h3>Administrator Access</h3>
+        </div>
+        <div class="security-modal-body">
+          <p><strong>⚠️ Restricted Area</strong></p>
+          <p>This area is for authorized administrators only.</p>
+
+          <div class="security-warning">
+            <i class="bi bi-info-circle"></i>
+            All access attempts are logged and monitored for security purposes.
+          </div>
+
+          <div class="access-code-group">
+            <label for="accessCode"><strong>Enter Access Code:</strong></label>
+            <input
+              type="password"
+              id="accessCode"
+              class="access-code-input"
+              placeholder="••••••••••"
+              maxlength="20"
+            />
+            <div id="attemptsWarning" class="attempts-warning"></div>
+          </div>
+
+          <div class="modal-buttons">
+            <button
+              class="modal-btn modal-btn-cancel"
+              onclick="closeSecurityModal()"
+            >
+              <i class="bi bi-x-circle"></i> Cancel
+            </button>
+            <button
+              class="modal-btn modal-btn-proceed"
+              onclick="verifyAdminAccess()"
+            >
+              <i class="bi bi-unlock"></i> Proceed
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Security variables
+      let adminAttempts = 0;
+      const maxAdminAttempts = 3;
+      const adminAccessCode = "ADMIN2024"; // In production, this should be more secure
+
+      // Password toggle functionality
+      function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleIcon = document.getElementById("passwordToggleIcon");
+
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          toggleIcon.classList.remove("bi-eye");
+          toggleIcon.classList.add("bi-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          toggleIcon.classList.remove("bi-eye-slash");
+          toggleIcon.classList.add("bi-eye");
+        }
+      }
+
+      // Email validation function
+      function validateEmail(email) {
+        const requiredDomain = "@paterostechnologicalcollege.edu.ph";
+        return email.toLowerCase().endsWith(requiredDomain.toLowerCase());
+      }
+
+      // Real-time email validation
+      document.getElementById("email").addEventListener("input", function (e) {
+        const email = e.target.value;
+        const emailInput = e.target;
+
+        if (email && !validateEmail(email)) {
+          emailInput.style.borderColor = "#dc3545";
+          emailInput.style.backgroundColor = "#fff5f5";
+
+          // Show error message if not already shown
+          if (!document.getElementById("emailError")) {
+            const errorMsg = document.createElement("div");
+            errorMsg.id = "emailError";
+            errorMsg.className = "error-message";
+            errorMsg.textContent =
+              "Please use your Pateros Technological College email address";
+            emailInput.parentNode.appendChild(errorMsg);
+          }
+        } else {
+          emailInput.style.borderColor = "#e0e0e0";
+          emailInput.style.backgroundColor = "#f8f9fa";
+
+          // Remove error message if exists
+          const errorMsg = document.getElementById("emailError");
+          if (errorMsg) {
+            errorMsg.remove();
+          }
+        }
+      });
+
+      // Login form submission
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+
+          // Validate email domain
+          if (!validateEmail(email)) {
+            alert(
+              "Please use your Pateros Technological College email address\n(example@paterostechnologicalcollege.edu.ph)"
+            );
+            return;
+          }
+
+          // Check if both fields are filled
+          if (email && password) {
+            alert(
+              "Login successful! Welcome to Study Group!\n(This will redirect to dashboard later)"
+            );
+            // TODO: Add actual login logic and redirect to dashboard
+            // window.location.href = 'dashboard.html';
+          } else {
+            alert("Please fill in all fields");
+          }
+        });
+
+      // Sign up button
+      function goToSignup() {
+        window.location.href = "sign-up.html";
+      }
+
+      // Security Modal Functions
+      function showAdminSecurity() {
+        document.getElementById("securityModal").style.display = "block";
+        document.getElementById("accessCode").focus();
+
+        // Reset attempts warning
+        document.getElementById("attemptsWarning").textContent = "";
+      }
+
+      function closeSecurityModal() {
+        document.getElementById("securityModal").style.display = "none";
+        document.getElementById("accessCode").value = "";
+        document.getElementById("attemptsWarning").textContent = "";
+      }
+
+      function verifyAdminAccess() {
+        const enteredCode = document.getElementById("accessCode").value;
+        const warningElement = document.getElementById("attemptsWarning");
+
+        if (!enteredCode) {
+          warningElement.textContent = "Please enter the access code";
+          return;
+        }
+
+        adminAttempts++;
+
+        if (enteredCode === adminAccessCode) {
+          // Success - redirect to admin login
+          closeSecurityModal();
+
+          // Show success message
+          const successDiv = document.createElement("div");
+          successDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #27ae60;
+                    color: white;
+                    padding: 20px 40px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    z-index: 10001;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                `;
+          successDiv.innerHTML =
+            '<i class="bi bi-check-circle"></i> Access granted! Redirecting...';
+          document.body.appendChild(successDiv);
+
+          setTimeout(() => {
+            window.location.href = "admin-login.html";
+          }, 1500);
+        } else {
+          // Failed attempt
+          if (adminAttempts >= maxAdminAttempts) {
+            warningElement.textContent =
+              "Maximum attempts reached. Access denied.";
+            document.getElementById("accessCode").disabled = true;
+
+            setTimeout(() => {
+              closeSecurityModal();
+              alert("Too many failed attempts. Please contact IT support.");
+              adminAttempts = 0;
+              document.getElementById("accessCode").disabled = false;
+            }, 3000);
+          } else {
+            const remaining = maxAdminAttempts - adminAttempts;
+            warningElement.textContent = `Invalid code. ${remaining} attempt${
+              remaining === 1 ? "" : "s"
+            } remaining.`;
+            document.getElementById("accessCode").value = "";
+            document.getElementById("accessCode").style.borderColor = "#e74c3c";
+
+            setTimeout(() => {
+              document.getElementById("accessCode").style.borderColor = "#ddd";
+            }, 2000);
+          }
+        }
+      }
+
+      // Close modal when clicking outside
+      window.addEventListener("click", function (event) {
+        const modal = document.getElementById("securityModal");
+        if (event.target === modal) {
+          closeSecurityModal();
+        }
+      });
+
+      // Handle Enter key in access code input
+      document
+        .getElementById("accessCode")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            verifyAdminAccess();
+          }
+        });
+
+      // Security logging (in production, this should be server-side)
+      function logSecurityEvent(event) {
+        console.log(`Security Event: ${event} at ${new Date().toISOString()}`);
+      }
+
+      // Log when admin button is clicked
+      function showAdminSecurity() {
+        logSecurityEvent("Admin access attempted");
+        document.getElementById("securityModal").style.display = "block";
+        document.getElementById("accessCode").focus();
+        document.getElementById("attemptsWarning").textContent = "";
+      }
+    </script>
+  </body>
+</html>

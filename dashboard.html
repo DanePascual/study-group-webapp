@@ -1,0 +1,1434 @@
+<!--dashboard.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <title>Dashboard - Study Group</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: #f8f9fa;
+        overflow-x: hidden;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        transition: left 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar.open {
+        left: 0;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-brand {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-menu {
+        padding: 20px 0;
+      }
+
+      .sidebar-item {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 15px 20px;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+      }
+
+      .sidebar-item:hover,
+      .sidebar-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: white;
+        color: white;
+      }
+
+      .sidebar-item i {
+        width: 20px;
+        margin-right: 10px;
+      }
+
+      .sidebar-footer {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        padding: 0 20px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+      }
+
+      .user-info:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        transform: translateY(-1px);
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #4caf50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+      }
+
+      /* Main Content */
+      .main-content {
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+        min-height: 100vh;
+      }
+
+      .main-content.shifted {
+        margin-left: 280px;
+      }
+
+      /* Top Navigation */
+      .top-nav {
+        background: white;
+        padding: 15px 30px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 20px;
+        color: #666;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+      }
+
+      .menu-toggle:hover {
+        background: #f0f0f0;
+      }
+
+      .page-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .search-bar {
+        position: relative;
+      }
+
+      .search-input {
+        width: 300px;
+        padding: 10px 40px 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 25px;
+        font-size: 14px;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+      }
+
+      /* Dashboard Content */
+      .dashboard-content {
+        padding: 30px;
+      }
+
+      .content-row {
+        display: flex;
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .main-section {
+        flex: 2;
+      }
+
+      .side-section {
+        flex: 1;
+        max-width: 350px;
+      }
+
+      /* Quick Study Actions */
+      .quick-actions {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+      }
+
+      .section-title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .action-card {
+        background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+      }
+
+      .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        color: white;
+      }
+
+      .action-card i {
+        font-size: 28px;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .action-card h4 {
+        font-size: 16px;
+        margin-bottom: 5px;
+      }
+
+      .action-card p {
+        font-size: 12px;
+        opacity: 0.9;
+        margin: 0;
+      }
+
+      /* Study Rooms Section */
+      .study-rooms {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .room-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .room-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .room-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-color: #4caf50;
+      }
+
+      .room-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+      }
+
+      .room-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .room-description {
+        font-size: 13px;
+        color: #666;
+        line-height: 1.4;
+      }
+
+      .room-tags {
+        display: flex;
+        gap: 8px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+      }
+
+      .room-tag {
+        background: #e8f5e8;
+        color: #2e7d32;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .room-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+      }
+
+      .participant-count {
+        font-size: 13px;
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .join-btn {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .join-btn:hover {
+        background: #388e3c;
+        transform: translateY(-1px);
+      }
+
+      /* To-Do Section */
+      .todo-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+      }
+
+      .todo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .add-todo-btn {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .add-todo-btn:hover {
+        background: #388e3c;
+      }
+
+      .todo-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid #4caf50;
+      }
+
+      .todo-item.completed {
+        opacity: 0.6;
+        border-left-color: #ccc;
+      }
+
+      .todo-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .todo-checkbox {
+        margin-top: 3px;
+      }
+
+      .todo-text {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .todo-text.completed {
+        text-decoration: line-through;
+        color: #666;
+      }
+
+      .todo-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #666;
+      }
+
+      .todo-reminder {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .todo-actions {
+        display: flex;
+        gap: 5px;
+      }
+
+      .todo-action-btn {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 2px 5px;
+        border-radius: 3px;
+      }
+
+      .todo-action-btn:hover {
+        background: #e0e0e0;
+      }
+
+      /* Stats Cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: #4caf50;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .stat-change {
+        font-size: 10px;
+        color: #4caf50;
+        margin-top: 3px;
+      }
+
+      /* Todo Form Modal */
+      .todo-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+
+      .todo-modal-content {
+        background: white;
+        margin: 10% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-input,
+      .form-textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus {
+        outline: none;
+        border-color: #4caf50;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .modal-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .modal-btn-cancel {
+        background: #f5f5f5;
+        color: #666;
+      }
+
+      .modal-btn-save {
+        background: #4caf50;
+        color: white;
+      }
+
+      .modal-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .main-content.shifted {
+          margin-left: 0;
+        }
+
+        .content-row {
+          flex-direction: column;
+        }
+
+        .search-input {
+          width: 200px;
+        }
+
+        .action-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .room-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .dashboard-content {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <i class="bi bi-book"></i>
+          StudyGroup
+        </div>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="sidebar-item active">
+          <i class="bi bi-house"></i>
+          Dashboard
+        </a>
+        <a href="#" class="sidebar-item">
+          <i class="bi bi-person"></i>
+          Profile
+        </a>
+        <a href="#" class="sidebar-item">
+          <i class="bi bi-door-open"></i>
+          Study Rooms
+        </a>
+        <a href="#" class="sidebar-item">
+          <i class="bi bi-folder"></i>
+          Resources
+        </a>
+        <a href="#" class="sidebar-item">
+          <i class="bi bi-chat-dots"></i>
+          Discussion Forum
+        </a>
+        <a href="#" class="sidebar-item">
+          <i class="bi bi-graph-up"></i>
+          Report
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div
+          class="user-info"
+          onclick="goToProfile()"
+          style="cursor: pointer; transition: all 0.3s ease"
+        >
+          <div class="user-avatar">VC</div>
+          <div>
+            <div style="font-weight: bold; font-size: 14px">Vale Cla</div>
+            <div style="font-size: 12px; opacity: 0.8">BSIT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+      <!-- Top Navigation -->
+      <div class="top-nav">
+        <div class="nav-left">
+          <button class="menu-toggle" id="menuToggle">
+            <i class="bi bi-list"></i>
+          </button>
+          <h1 class="page-title">Dashboard</h1>
+        </div>
+
+        <div class="search-bar">
+          <input type="text" class="search-input" placeholder="Search..." />
+          <i class="bi bi-search search-icon"></i>
+        </div>
+      </div>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <div class="content-row">
+          <!-- Main Section -->
+          <div class="main-section">
+            <!-- Quick Study Actions -->
+            <div class="quick-actions">
+              <h2 class="section-title">
+                <i class="bi bi-lightning"></i>
+                Quick Study Actions
+              </h2>
+              <div class="action-grid">
+                <button class="action-card" onclick="startFocusSession()">
+                  <i class="bi bi-stopwatch"></i>
+                  <h4>Start Focus Session</h4>
+                  <p>25-minute focused study</p>
+                </button>
+                <button class="action-card" onclick="joinPopularRoom()">
+                  <i class="bi bi-people"></i>
+                  <h4>Join Popular Room</h4>
+                  <p>Most active study room</p>
+                </button>
+                <button class="action-card" onclick="createStudyGroup()">
+                  <i class="bi bi-plus-circle"></i>
+                  <h4>Create Study Group</h4>
+                  <p>Start your own session</p>
+                </button>
+                <button class="action-card" onclick="browseResources()">
+                  <i class="bi bi-folder2-open"></i>
+                  <h4>Browse Resources</h4>
+                  <p>Study materials & notes</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Study Rooms -->
+            <div class="study-rooms">
+              <h2 class="section-title">
+                <i class="bi bi-door-open"></i>
+                Active Study Rooms
+              </h2>
+              <div class="room-grid">
+                <div class="room-card" data-room-id="cs">
+                  <div class="room-header">
+                    <div>
+                      <h3 class="room-title">CS Study Room</h3>
+                      <p class="room-description">
+                        Solving problems related to algorithms and data
+                        structures.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="room-tags">
+                    <span class="room-tag">Programming</span>
+                    <span class="room-tag">Algorithms</span>
+                  </div>
+                  <div class="room-footer">
+                    <span class="participant-count">
+                      <i class="bi bi-people"></i>
+                      0 participants
+                    </span>
+                    <button class="join-btn" onclick="joinRoom('cs')">
+                      Ask to Join
+                    </button>
+                  </div>
+                </div>
+
+                <div class="room-card" data-room-id="biology">
+                  <div class="room-header">
+                    <div>
+                      <h3 class="room-title">Biology Study Room</h3>
+                      <p class="room-description">
+                        Reviewing cell structures, genetics, and biological
+                        systems.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="room-tags">
+                    <span class="room-tag">DNA</span>
+                    <span class="room-tag">Human Biology</span>
+                  </div>
+                  <div class="room-footer">
+                    <span class="participant-count">
+                      <i class="bi bi-people"></i>
+                      0 participants
+                    </span>
+                    <button class="join-btn" onclick="joinRoom('biology')">
+                      Ask to Join
+                    </button>
+                  </div>
+                </div>
+
+                <div class="room-card" data-room-id="business">
+                  <div class="room-header">
+                    <div>
+                      <h3 class="room-title">Business Study Room</h3>
+                      <p class="room-description">
+                        Working through case studies and entrepreneurship
+                        concepts.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="room-tags">
+                    <span class="room-tag">Market Research</span>
+                  </div>
+                  <div class="room-footer">
+                    <span class="participant-count">
+                      <i class="bi bi-people"></i>
+                      0 participants
+                    </span>
+                    <button class="join-btn" onclick="joinRoom('business')">
+                      Ask to Join
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side Section -->
+          <div class="side-section">
+            <!-- To-Do Lists -->
+            <div class="todo-section">
+              <div class="todo-header">
+                <h3 class="section-title">
+                  <i class="bi bi-check2-square"></i>
+                  Study Notes & Reminders
+                </h3>
+                <button class="add-todo-btn" onclick="openTodoModal()">
+                  <i class="bi bi-plus"></i> Add Note
+                </button>
+              </div>
+
+              <div id="todoList">
+                <div class="todo-item">
+                  <div class="todo-content">
+                    <input
+                      type="checkbox"
+                      class="todo-checkbox"
+                      onchange="toggleTodo(this)"
+                    />
+                    <div class="todo-text">
+                      Join Study Room: Python Practice Session
+                    </div>
+                  </div>
+                  <div class="todo-meta">
+                    <div class="todo-reminder">
+                      <i class="bi bi-clock"></i>
+                      <span>Today at 6 PM</span>
+                    </div>
+                    <div class="todo-actions">
+                      <button class="todo-action-btn" onclick="editTodo(this)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        class="todo-action-btn"
+                        onclick="deleteTodo(this)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="todo-item">
+                  <div class="todo-content">
+                    <input
+                      type="checkbox"
+                      class="todo-checkbox"
+                      onchange="toggleTodo(this)"
+                    />
+                    <div class="todo-text">
+                      Prepare Slides for Cybersecurity Presentation
+                    </div>
+                  </div>
+                  <div class="todo-meta">
+                    <div class="todo-reminder">
+                      <i class="bi bi-clock"></i>
+                      <span>Tomorrow</span>
+                    </div>
+                    <div class="todo-actions">
+                      <button class="todo-action-btn" onclick="editTodo(this)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        class="todo-action-btn"
+                        onclick="deleteTodo(this)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="todo-item">
+                  <div class="todo-content">
+                    <input
+                      type="checkbox"
+                      class="todo-checkbox"
+                      onchange="toggleTodo(this)"
+                    />
+                    <div class="todo-text">
+                      Review Networking Concepts for Quiz (focus on VLANs & IP
+                      Addressing)
+                    </div>
+                  </div>
+                  <div class="todo-meta">
+                    <div class="todo-reminder">
+                      <i class="bi bi-clock"></i>
+                      <span>Friday 2 PM</span>
+                    </div>
+                    <div class="todo-actions">
+                      <button class="todo-action-btn" onclick="editTodo(this)">
+                        <i class="bi bi-pencil"></i>
+                      </button>
+                      <button
+                        class="todo-action-btn"
+                        onclick="deleteTodo(this)"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Study Stats -->
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Active Rooms</div>
+                <div class="stat-change">+1 today</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Study Groups</div>
+                <div class="stat-change">2 subjects</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-number">18</div>
+                <div class="stat-label">Resources</div>
+                <div class="stat-change">+5 this week</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Todo Modal -->
+    <div id="todoModal" class="todo-modal">
+      <div class="todo-modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Add Study Note & Reminder</h3>
+          <button class="close-modal" onclick="closeTodoModal()">×</button>
+        </div>
+
+        <form id="todoForm">
+          <div class="form-group">
+            <label class="form-label">Task/Note</label>
+            <textarea
+              class="form-textarea"
+              id="todoText"
+              placeholder="Enter your study task or note..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Reminder Date & Time (Optional)</label>
+            <input type="datetime-local" class="form-input" id="todoReminder" />
+          </div>
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="modal-btn modal-btn-cancel"
+              onclick="closeTodoModal()"
+            >
+              Cancel
+            </button>
+            <button type="submit" class="modal-btn modal-btn-save">
+              Save Note
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // NOTE: Sample data shown below - will be replaced with real user data after login integration
+      // User info (Vale Cla, BSIT) and room participants are placeholder data for design purposes
+
+      // Sidebar Toggle
+      const menuToggle = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+      const mainContent = document.getElementById("mainContent");
+
+      menuToggle.addEventListener("click", function () {
+        sidebar.classList.toggle("open");
+        mainContent.classList.toggle("shifted");
+      });
+
+      // Close sidebar when clicking outside on mobile
+      document.addEventListener("click", function (event) {
+        if (window.innerWidth <= 768) {
+          if (
+            !sidebar.contains(event.target) &&
+            !menuToggle.contains(event.target)
+          ) {
+            sidebar.classList.remove("open");
+            mainContent.classList.remove("shifted");
+          }
+        }
+      });
+
+      // Quick Study Actions
+      function startFocusSession() {
+        alert(
+          "🎯 Starting 25-minute focus session!\n\nFind a quiet space and let's get productive. Timer will begin when you click OK."
+        );
+        // TODO: Integrate with actual focus timer
+      }
+
+      function joinPopularRoom() {
+        alert(
+          "🔥 Joining most active study room!\n\nYou'll be connected to the CS Study Room with 5 active participants."
+        );
+        // TODO: Redirect to most popular room
+      }
+
+      function createStudyGroup() {
+        alert(
+          "➕ Let's create your study group!\n\nYou'll be redirected to set up your new study session."
+        );
+        // TODO: Redirect to create room page
+      }
+
+      function browseResources() {
+        alert(
+          "📚 Opening study resources!\n\nAccess notes, documents, and study materials shared by your study group."
+        );
+        // TODO: Redirect to resources page
+      }
+
+      function goToProfile() {
+        alert(
+          "🔄 Redirecting to Profile page...\n\nThis will be connected once the Profile page is ready!"
+        );
+        // TODO: window.location.href = 'profile.html';
+      }
+
+      function joinRoom(roomType) {
+        const rooms = {
+          cs: "CS Study Room",
+          biology: "Biology Study Room",
+          business: "Business Study Room",
+        };
+        alert(
+          `📚 Requesting to join ${rooms[roomType]}!\n\nYour request has been sent to the room moderator. You'll get a notification once approved.`
+        );
+        // TODO: Send join request to backend
+      }
+
+      // Todo Modal Functions
+      let editingTodoIndex = -1;
+      let todos = JSON.parse(localStorage.getItem("studyNotes") || "[]");
+
+      function openTodoModal() {
+        document.getElementById("todoModal").style.display = "block";
+        document.getElementById("todoText").value = "";
+        document.getElementById("todoReminder").value = "";
+        editingTodoIndex = -1;
+        document.querySelector(".modal-title").textContent =
+          "Add Study Note & Reminder";
+      }
+
+      function closeTodoModal() {
+        document.getElementById("todoModal").style.display = "none";
+      }
+
+      function saveTodo() {
+        const text = document.getElementById("todoText").value.trim();
+        const reminder = document.getElementById("todoReminder").value;
+
+        if (!text) {
+          alert("Please enter a task or note!");
+          return;
+        }
+
+        const todo = {
+          id: Date.now(),
+          text: text,
+          completed: false,
+          reminder: reminder,
+          created: new Date().toISOString(),
+        };
+
+        if (editingTodoIndex >= 0) {
+          todos[editingTodoIndex] = {
+            ...todos[editingTodoIndex],
+            text: text,
+            reminder: reminder,
+          };
+        } else {
+          todos.push(todo);
+        }
+
+        localStorage.setItem("studyNotes", JSON.stringify(todos));
+        renderTodos();
+        closeTodoModal();
+
+        // Set browser notification if reminder is set
+        if (reminder) {
+          scheduleNotification(todo);
+        }
+      }
+
+      function renderTodos() {
+        const todoList = document.getElementById("todoList");
+
+        if (todos.length === 0) {
+          todoList.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #666;">
+                        <i class="bi bi-journal-text" style="font-size: 48px; margin-bottom: 15px; display: block;"></i>
+                        <p>No study notes yet.</p>
+                        <p style="font-size: 12px;">Click "Add Note" to create your first reminder!</p>
+                    </div>
+                `;
+          return;
+        }
+
+        todoList.innerHTML = todos
+          .map(
+            (todo, index) => `
+                <div class="todo-item ${todo.completed ? "completed" : ""}">
+                    <div class="todo-content">
+                        <input type="checkbox" class="todo-checkbox" ${
+                          todo.completed ? "checked" : ""
+                        } onchange="toggleTodo(${index})">
+                        <div class="todo-text ${
+                          todo.completed ? "completed" : ""
+                        }">${todo.text}</div>
+                    </div>
+                    <div class="todo-meta">
+                        <div class="todo-reminder">
+                            <i class="bi bi-clock"></i>
+                            <span>${
+                              todo.reminder
+                                ? formatReminderDate(todo.reminder)
+                                : "No reminder"
+                            }</span>
+                        </div>
+                        <div class="todo-actions">
+                            <button class="todo-action-btn" onclick="editTodo(${index})">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="todo-action-btn" onclick="deleteTodo(${index})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function toggleTodo(index) {
+        todos[index].completed = !todos[index].completed;
+        localStorage.setItem("studyNotes", JSON.stringify(todos));
+        renderTodos();
+      }
+
+      function editTodo(index) {
+        editingTodoIndex = index;
+        const todo = todos[index];
+        document.getElementById("todoText").value = todo.text;
+        document.getElementById("todoReminder").value = todo.reminder || "";
+        document.querySelector(".modal-title").textContent = "Edit Study Note";
+        document.getElementById("todoModal").style.display = "block";
+      }
+
+      function deleteTodo(index) {
+        if (confirm("Are you sure you want to delete this note?")) {
+          todos.splice(index, 1);
+          localStorage.setItem("studyNotes", JSON.stringify(todos));
+          renderTodos();
+        }
+      }
+
+      function formatReminderDate(dateString) {
+        if (!dateString) return "No reminder";
+
+        const date = new Date(dateString);
+        const now = new Date();
+        const today = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate()
+        );
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const reminderDate = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+
+        let dateText;
+        if (reminderDate.getTime() === today.getTime()) {
+          dateText = "Today";
+        } else if (reminderDate.getTime() === tomorrow.getTime()) {
+          dateText = "Tomorrow";
+        } else {
+          dateText = date.toLocaleDateString();
+        }
+
+        const timeText = date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        return `${dateText} at ${timeText}`;
+      }
+
+      function scheduleNotification(todo) {
+        if (!todo.reminder) return;
+
+        const reminderTime = new Date(todo.reminder);
+        const now = new Date();
+        const timeDiff = reminderTime.getTime() - now.getTime();
+
+        if (timeDiff > 0) {
+          // Request notification permission
+          if (Notification.permission === "default") {
+            Notification.requestPermission().then((permission) => {
+              if (permission === "granted") {
+                setTimeout(() => {
+                  showNotification(todo);
+                }, timeDiff);
+              }
+            });
+          } else if (Notification.permission === "granted") {
+            setTimeout(() => {
+              showNotification(todo);
+            }, timeDiff);
+          }
+        }
+      }
+
+      function showNotification(todo) {
+        if (Notification.permission === "granted") {
+          const notification = new Notification("📚 Study Reminder!", {
+            body: todo.text,
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%234caf50"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="30">📚</text></svg>',
+            badge:
+              'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%234caf50"/></svg>',
+          });
+
+          notification.onclick = function () {
+            window.focus();
+            notification.close();
+          };
+
+          // Auto close after 5 seconds
+          setTimeout(() => {
+            notification.close();
+          }, 5000);
+        }
+      }
+
+      // Todo Form Submit
+      document
+        .getElementById("todoForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          saveTodo();
+        });
+
+      // Close modal when clicking outside
+      document
+        .getElementById("todoModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeTodoModal();
+          }
+        });
+
+      // Initialize todos on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        renderTodos();
+
+        // Check for pending notifications on page load
+        todos.forEach((todo) => {
+          if (todo.reminder && !todo.completed) {
+            scheduleNotification(todo);
+          }
+        });
+
+        // Request notification permission on first visit
+        if (Notification.permission === "default") {
+          setTimeout(() => {
+            if (
+              confirm(
+                "📚 StudyGroup would like to send you study reminders.\n\nAllow notifications to get reminded about your study tasks?"
+              )
+            ) {
+              Notification.requestPermission();
+            }
+          }, 2000);
+        }
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener("keydown", function (e) {
+        // Alt + N to add new todo
+        if (e.altKey && e.key === "n") {
+          e.preventDefault();
+          openTodoModal();
+        }
+
+        // Escape to close modal
+        if (e.key === "Escape") {
+          closeTodoModal();
+        }
+      });
+
+      // Search functionality (basic)
+      document
+        .querySelector(".search-input")
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          if (searchTerm.length > 2) {
+            // This is a placeholder - in real app, this would search rooms, users, resources
+            console.log("Searching for:", searchTerm);
+            // TODO: Implement actual search functionality
+          }
+        });
+
+      // Auto-save todos every 30 seconds (in case of browser crash)
+      setInterval(() => {
+        if (todos.length > 0) {
+          localStorage.setItem("studyNotes", JSON.stringify(todos));
+        }
+      }, 30000);
+
+      // Show tips for new users
+      setTimeout(() => {
+        if (todos.length === 0 && !localStorage.getItem("hasSeenTips")) {
+          const showTips = confirm(
+            "👋 Welcome to StudyGroup!\n\nWould you like some quick tips to get started?"
+          );
+          if (showTips) {
+            alert(
+              '💡 Quick Tips:\n\n• Use "Add Note" to create study reminders\n• Set reminder times to get notifications\n• Join active study rooms to collaborate\n• Use Quick Actions for fast access to features\n• Press Alt+N to quickly add a new note'
+            );
+            localStorage.setItem("hasSeenTips", "true");
+          }
+        }
+      }, 3000);
+
+      // Animate stats cards on load
+      document.addEventListener("DOMContentLoaded", function () {
+        const statCards = document.querySelectorAll(".stat-card");
+        statCards.forEach((card, index) => {
+          setTimeout(() => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(20px)";
+            card.style.transition = "all 0.5s ease";
+
+            setTimeout(() => {
+              card.style.opacity = "1";
+              card.style.transform = "translateY(0)";
+            }, 100);
+          }, index * 100);
+        });
+      });
+
+      // Dynamic greeting based on time
+      function updateGreeting() {
+        const hour = new Date().getHours();
+        let greeting;
+
+        if (hour < 12) {
+          greeting = "🌅 Good morning";
+        } else if (hour < 17) {
+          greeting = "☀️ Good afternoon";
+        } else {
+          greeting = "🌙 Good evening";
+        }
+
+        // This could be added to the page title or user area
+        console.log(greeting + ", ready to study?");
+      }
+
+      updateGreeting();
+
+      // Update active study rooms count dynamically
+      function updateActiveRoomsCount() {
+        const roomCards = document.querySelectorAll(".room-card");
+        const count = roomCards.length;
+        const statNumber = document.querySelector(".stat-card .stat-number");
+        if (statNumber) {
+          statNumber.textContent = count;
+        }
+      }
+
+      updateActiveRoomsCount();
+
+      // Function to update participant count (for future backend integration)
+      function updateParticipantCount(roomId, count) {
+        const roomCard = document.querySelector(`[data-room-id="${roomId}"]`);
+        if (roomCard) {
+          const participantSpan = roomCard.querySelector(".participant-count");
+          participantSpan.innerHTML = `<i class="bi bi-people"></i> ${count} participant${
+            count !== 1 ? "s" : ""
+          }`;
+        }
+      }
+
+      // Example usage (for testing):
+      // updateParticipantCount('cs', 10);
+      // updateParticipantCount('biology', 5);
+      // updateParticipantCount('business', 0);
+    </script>
+  </body>
+</html>

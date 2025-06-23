@@ -1,0 +1,419 @@
+<!-- landing-page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <title>Study Group - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100vh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        .main-container {
+            background: linear-gradient(135deg, #618668 0%, #a2e0d8 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 80px;
+            position: relative;
+            gap: 60px;
+        }
+
+        .header {
+            position: absolute;
+            top: 40px;
+            left: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .header-icon {
+            font-size: 28px;
+            color: #243728;
+        }
+
+        .header-text {
+            font-size: 22px;
+            font-weight: 500;
+            color: #243728;
+            font-style: italic;
+        }
+
+        .profile-icon {
+            position: absolute;
+            top: 40px;
+            right: 60px;
+            font-size: 32px;
+            color: #243728;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .left-content {
+            flex: 0 0 auto;
+            max-width: 600px;
+            z-index: 5;
+            margin-right: 40px;
+        }
+
+        .welcome-title {
+            font-size: 72px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 50px;
+            font-style: italic;
+            font-weight: 300;
+        }
+
+        .get-started-btn {
+            background-color: #243728;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(36, 55, 40, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .get-started-btn:hover {
+            background-color: #1a2a1e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(36, 55, 40, 0.4);
+        }
+
+        .get-started-btn:active {
+            transform: translateY(0);
+        }
+
+        .right-content {
+            flex: 0 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .duck-container {
+            position: relative;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .duck-image {
+            width: 450px;
+            height: 450px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.3));
+            background: transparent;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Decorative elements */
+        .decoration-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .decoration-circle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 15%;
+            right: 15%;
+            animation-delay: 0s;
+        }
+
+        .decoration-circle:nth-child(2) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 10%;
+            animation-delay: 1s;
+        }
+
+        .decoration-circle:nth-child(3) {
+            width: 40px;
+            height: 40px;
+            top: 60%;
+            left: 5%;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding: 20px;
+                text-align: center;
+                gap: 30px;
+                justify-content: center;
+            }
+
+            .header {
+                left: 20px;
+                top: 20px;
+            }
+
+            .header-text {
+                font-size: 18px;
+            }
+
+            .profile-icon {
+                right: 20px;
+                top: 20px;
+                font-size: 28px;
+            }
+
+            .left-content {
+                max-width: 100%;
+                margin-right: 0;
+                margin-top: 80px;
+                text-align: center;
+                order: 1;
+            }
+
+            .right-content {
+                order: 2;
+                margin-top: 0;
+            }
+
+            .welcome-title {
+                font-size: 48px;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            .welcome-subtitle {
+                font-size: 20px;
+                margin-bottom: 40px;
+                text-align: center;
+            }
+
+            .get-started-btn {
+                padding: 15px 35px;
+                font-size: 16px;
+            }
+
+            .duck-image {
+                width: 280px;
+                height: 280px;
+            }
+
+            .decoration-circle {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 15px;
+                gap: 20px;
+            }
+
+            .left-content {
+                margin-top: 60px;
+            }
+
+            .welcome-title {
+                font-size: 36px;
+                text-align: center;
+                line-height: 1.2;
+            }
+
+            .welcome-subtitle {
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .duck-image {
+                width: 220px;
+                height: 220px;
+            }
+
+            .get-started-btn {
+                padding: 12px 30px;
+                font-size: 14px;
+            }
+
+            .header {
+                left: 15px;
+                top: 15px;
+            }
+
+            .profile-icon {
+                right: 15px;
+                top: 15px;
+                font-size: 24px;
+            }
+
+            .header-text {
+                font-size: 16px;
+            }
+
+            .header-icon {
+                font-size: 24px;
+            }
+        }
+
+        /* Landscape mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .main-container {
+                flex-direction: row;
+                gap: 40px;
+                padding: 20px 40px;
+            }
+
+            .left-content {
+                margin-top: 0;
+                text-align: left;
+                order: 1;
+            }
+
+            .right-content {
+                order: 2;
+            }
+
+            .welcome-title {
+                font-size: 32px;
+                text-align: left;
+            }
+
+            .welcome-subtitle {
+                font-size: 16px;
+                text-align: left;
+            }
+
+            .duck-image {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Decorative circles -->
+        <div class="decoration-circle"></div>
+        <div class="decoration-circle"></div>
+        <div class="decoration-circle"></div>
+
+        <!-- Header -->
+        <div class="header">
+            <i class="bi bi-lightbulb-fill header-icon"></i>
+            <span class="header-text">Study Group</span>
+        </div>
+
+        <!-- Profile Icon -->
+        <i class="bi bi-person-fill profile-icon"></i>
+
+        <!-- Left Content -->
+        <div class="left-content">
+            <h1 class="welcome-title">Welcome to<br>Study Group</h1>
+            <p class="welcome-subtitle">Let's make learning fun!</p>
+            <button class="get-started-btn" onclick="getStarted()">GET STARTED</button>
+        </div>
+
+        <!-- Right Content - Duck Image -->
+        <div class="right-content">
+            <div class="duck-container">
+                <img src="duck.png" alt="Study Group Duck Mascot" class="duck-image">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function getStarted() {
+            // Add a smooth transition effect
+            document.body.style.transition = 'opacity 0.3s ease-out';
+            document.body.style.opacity = '0';
+            
+            // Redirect to login page after transition
+            setTimeout(() => {
+                window.location.href = 'student-login.html';
+            }, 300);
+        }
+
+        // Add some interactive elements
+        document.querySelector('.profile-icon').addEventListener('click', function() {
+            // Could redirect to profile or login
+            window.location.href = 'student-login.html';
+        });
+
+        // Add keyboard shortcut for get started
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                getStarted();
+            }
+        });
+
+        // Add smooth loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add hover effect to duck
+        document.querySelector('.duck-container').addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.transition = 'transform 0.3s ease';
+        });
+
+        document.querySelector('.duck-container').addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    </script>
+</body>
+</html>
